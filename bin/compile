@@ -95,7 +95,7 @@ echo "-----> Executing $COMPILECMD"
 eval "$COMPILECMD" | sed -u 's/^/       /'
 check_build_status
 
-if [-z "$GRAILS_ENV"]
+if [-z "$GRAILS_ENV"] ; then
   GRAILS_ENV=$(get_property $BUILD_DIR/heroku-build.properties 'grails.env')
   if [ -z "$GRAILS_ENV" ] ; then
     GRAILS_ENV='production'
