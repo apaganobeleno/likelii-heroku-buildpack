@@ -33,7 +33,7 @@ install_grails(){
 
   GRAILS_TAR_FILE="grails-heroku.zip"
   echo "-----> Installing Grails $VER_TO_INSTALL....."
-  curl --silent --max-time 150 --location $GRAILS_URL -o $GRAILS_TAR_FILE
+  curl --silent --location $GRAILS_URL -o $GRAILS_TAR_FILE
 
   # Error checking
   if [ ! -f $GRAILS_TAR_FILE ]; then
