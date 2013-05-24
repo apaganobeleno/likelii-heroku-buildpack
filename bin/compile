@@ -25,9 +25,9 @@ check_build_status()
 install_grails()
 {
   VER_TO_INSTALL=$1
-  GRAILS_URL="http://s3.amazonaws.com/heroku-jvm-buildpack-grails/grails-$VER_TO_INSTALL.tar.gz"
+  GRAILS_URL="http://dist.springframework.org.s3.amazonaws.com/release/GRAILS/grails-$VER_TO_INSTALL.zip"
 
-  GRAILS_TAR_FILE="grails-heroku.tar.gz"
+  GRAILS_TAR_FILE="grails-heroku.zip"
   echo "-----> Installing Grails $VER_TO_INSTALL....."
   curl --silent --max-time 150 --location $GRAILS_URL -o $GRAILS_TAR_FILE
 
@@ -41,7 +41,7 @@ install_grails()
     exit 1
   fi
 
-  tar xzf $GRAILS_TAR_FILE
+  jar xf $GRAILS_TAR_FILE
   rm $GRAILS_TAR_FILE
 
   echo "-----> Done"
