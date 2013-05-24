@@ -26,7 +26,8 @@ install_grails()
 {
   VER_TO_INSTALL=$1
   GRAILS_URL="http://dist.springframework.org.s3.amazonaws.com/release/GRAILS/grails-$VER_TO_INSTALL.zip"
-
+  echo GRAILS_URL
+  
   GRAILS_TAR_FILE="grails-heroku.zip"
   echo "-----> Installing Grails $VER_TO_INSTALL....."
   curl --silent --max-time 150 --location $GRAILS_URL -o $GRAILS_TAR_FILE
