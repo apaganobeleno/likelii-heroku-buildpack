@@ -26,12 +26,12 @@ check_build_status()
   fi
 }
 
-install_grails()
-{
+install_grails(){
   VER_TO_INSTALL=$1
   GRAILS_URL="http://dist.springframework.org.s3.amazonaws.com/release/GRAILS/grails-$VER_TO_INSTALL.zip"
+  echo "Instaling from: $GRAILS_URL"
 
-  GRAILS_TAR_FILE="grails-heroku.tar.gz"
+  GRAILS_TAR_FILE="grails-heroku.zip"
   echo "-----> Installing Grails $VER_TO_INSTALL....."
   curl --silent --max-time 150 --location $GRAILS_URL -o $GRAILS_TAR_FILE
 
@@ -56,7 +56,7 @@ if [ ! -f $BUILD_DIR/application.properties ] ; then
     echo " !     Failed to build app"
     exit 1
 fi
-    
+
 GRAILS_VERSION=$(get_property $BUILD_DIR/application.properties 'app.grails.version')
 
 echo "-----> Grails $GRAILS_VERSION app detected"
@@ -128,13 +128,8 @@ echo "grails.dependency.cache.dir = '$CACHE_DIR/.grails_cache'" >> $HOME/.grails
 if [ "$GRAILS_VERSION" != "1.3.7" ] ; then
     BUILDCMD_OPT="-plain-output"
 fi
-
-COMPILECMD="$GRAILS_CMD -Divy.default.ivy.user.dir=$CACHE_DIR compile --non-interactive"
-echo "-----> Executing $COMPILECMD"
-eval "$COMPILECMD" | sed -u 's/^/       /'
-check_build_status
-
-BUILDCMD="$GRAILS_CMD $BUILDCMD_OPT -Divy.default.ivy.user.dir=$CACHE_DIR war --non-interactive"
+COMPILECMD="grails -Divy.default.ivy.user.dir=$CACHE_DIR compile"
+BUILDCMD="grails -Dgrails.env=$GRAILS_ENV $BUILDCMD_OPT -Divy.default.ivy.user.dir=$CACHE_DIR war"
 echo "-----> Executing $BUILDCMD"
 eval "$BUILDCMD" | sed -u 's/^/       /'
 check_build_status
@@ -154,12 +149,4 @@ if [ ! -d server ] ; then
     echo "vendored:$JETTY_RUNNER_VERSION" > server/jettyVersion
     echo "vendored:$JETTY_RUNNER_VERSION" > $CACHE_DIR/jettyVersion
 fi
-
-PROFILE_PATH="$BUILD_DIR/.profile.d/grails.sh"
-mkdir -p $(dirname $PROFILE_PATH)
-echo 'export PATH="/app/.jdk/bin:$PATH"' >> $PROFILE_PATH
-
-echo "-----> Compiling runner"
-$JAVA_HOME/bin/javac -d $BUILD_DIR/server -cp $BUILD_DIR/server/jetty-runner.jar $BIN_DIR/../server/*.java
-
 
